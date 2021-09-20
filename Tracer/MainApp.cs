@@ -2,6 +2,8 @@
 using System.Threading;
 using TracerLib;
 using TracerLib.Serialization;
+using App.Output;
+using System.IO;
 
 namespace MyTracerApp
 {
@@ -24,9 +26,20 @@ namespace MyTracerApp
             TraceResult traceResult = tracer.GetTraceResult();
             string json = jsonSerializer.Serialize(traceResult);
             string xml = xmlSerializer.Serialize(traceResult);
-            
-            Console.WriteLine(xml);
-            Console.WriteLine(json);
+
+            var projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            var dataPath = Path.Combine(projectDirectory, "Files");
+
+            var filePrinter = new FilePrinter(Path.GetFullPath(Path.Combine(dataPath, "trace.xml")));
+            var consolePrinter = new ConsolePrinter();
+
+            filePrinter.PrintResult(xml);
+            consolePrinter.PrintResult(xml);
+
+            filePrinter = new FilePrinter(Path.GetFullPath(Path.Combine(dataPath, "trace.json")));
+
+            filePrinter.PrintResult(json);
+            consolePrinter.PrintResult(json);
         }
 
         public void Method(object o)

@@ -1,0 +1,28 @@
+{
+  "threads": [
+    {
+      "id": 1,
+      "time": 112,
+      "methods": [
+        {
+          "name": "Main",
+          "class": "MainApp",
+          "time": 112.0,
+          "methods": null
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "time": 55,
+      "methods": [
+        {
+          "name": "Method",
+          "class": "MainApp",
+          "time": 55.0,
+          "methods": null
+        }
+      ]
+    }
+  ]
+}

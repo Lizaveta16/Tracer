@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using TracerLib;
+using TracerLib.Serialization;
 
 namespace MyTracerApp
 {
@@ -17,7 +18,15 @@ namespace MyTracerApp
             Thread thread1 = new Thread(new ParameterizedThreadStart(app.Method));
             thread1.Start(tracer);
             thread1.Join();
-            Console.WriteLine(tracer.GetTraceResult()); 
+
+            var xmlSerializer = new LXmlSerializer();
+            var jsonSerializer = new JsonSerializer();
+            TraceResult traceResult = tracer.GetTraceResult();
+            string json = jsonSerializer.Serialize(traceResult);
+            string xml = xmlSerializer.Serialize(traceResult);
+            
+            Console.WriteLine(xml);
+            Console.WriteLine(json);
         }
 
         public void Method(object o)

@@ -1,13 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace TracerLib
 {
+    [XmlType("thread")]
     public class ThreadTracer
     {
+        [JsonProperty("id")]
+        [XmlAttribute("id")]
         public int ThreadId { get; set; }
+
+        [JsonProperty("time")]
+        [XmlAttribute("time")]
         public long ThreadTime { get; set; }
+
+        [JsonProperty("methods")]
+        [XmlElement("methods")]
         public List<MethodTracer> MethodTracerList { get; set; }
 
+        public ThreadTracer() { }
         public ThreadTracer(int threadId)
         {
             ThreadId = threadId;

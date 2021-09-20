@@ -1,20 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace TracerLib
 {
     public class MethodTracer
     {
+        [JsonProperty("name")]
+        [XmlAttribute("name")]
         public string MethodName { get; set; }
+
+        [JsonProperty("class")]
+        [XmlAttribute("class")]
         public string ClassName { get; set; }
+
+        [JsonProperty("time")]
+        [XmlAttribute("time")]
         public double Time { get; set; }
 
+        [JsonProperty("methods")]
+        [XmlElement("methods")]
         public List<MethodTracer> ChildMethodsList { get; set; }
 
+        [JsonIgnore]
+        [XmlIgnore]
         private readonly byte[] _hash;
 
+        [JsonIgnore]
+        [XmlIgnore]
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
+        public MethodTracer() { }
         public MethodTracer(string methodName, string className, byte[] hash)
         {
             MethodName = methodName;

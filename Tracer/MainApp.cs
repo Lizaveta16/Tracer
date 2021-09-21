@@ -11,15 +11,21 @@ namespace MyTracerApp
     {
         static void Main(string[] args)
         {
-            Tracer tracer = new Tracer();
-            tracer.StartTrace();
-            Thread.Sleep(100);
-            tracer.StopTrace();
-
             MainApp app = new MainApp();
+            Thread thread = new Thread(new ParameterizedThreadStart(app.Method));
+            Tracer tracer = new Tracer();
+            Foo foo = new Foo(tracer);
+
+            foo.MyMethod();
+            thread.Start(tracer);
+            foo.MyMethod();
+            thread.Join();
+
             Thread thread1 = new Thread(new ParameterizedThreadStart(app.Method));
+            foo.MyMethod();
             thread1.Start(tracer);
             thread1.Join();
+
 
             var xmlSerializer = new LXmlSerializer();
             var jsonSerializer = new JsonSerializer();
@@ -48,6 +54,43 @@ namespace MyTracerApp
             tracer.StartTrace();
             Thread.Sleep(50);
             tracer.StopTrace();
+        }
+
+        public class Foo
+        {
+            private Bar _bar;
+            private ITracer _tracer;
+
+            internal Foo(ITracer tracer)
+            {
+                _tracer = tracer;
+                _bar = new Bar(_tracer);
+            }
+
+            public void MyMethod()
+            {
+                _tracer.StartTrace();
+                _bar.InnerMethod();
+                _bar.InnerMethod();
+                _tracer.StopTrace();
+            }
+        }
+
+        public class Bar
+        {
+            private ITracer _tracer;
+
+            internal Bar(ITracer tracer)
+            {
+                _tracer = tracer;
+            }
+
+            public void InnerMethod()
+            {
+                _tracer.StartTrace();
+                Thread.Sleep(100);
+                _tracer.StopTrace();
+            }
         }
     }
 }
